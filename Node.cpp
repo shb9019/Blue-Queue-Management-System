@@ -8,6 +8,4 @@ class Node {
 		ip = _ip;
 		mac = _mac;
 	}
-
-	
-}
+};
