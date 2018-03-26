@@ -15,5 +15,7 @@ class Packet {
 		dest = _dest;
 	}
 
-	
+	void remove_packet() {
+		
+	}
 }
