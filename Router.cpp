@@ -1,64 +1,57 @@
-#include<iostream>
+#include <bits/stdc++.h>
+#include <mutex>
+#include "Network.cpp"
+#include "Packet.cpp"
 using namespace std;
 
 class Router
 {
-	int mac_address;
-	int ip_address;
+	long long mac_address;
+	long long ip_address;
+    long long packets_received, packets_processed, packets_dropped;
+	Network* network;
+	queue<Packet*> q;
+    mutex mtx;
+	int queue_length;
 
-	packet queue q;
-	int queue_length = 10;
-	// sai defines queue using inbuilt queues only
-
-    //now define functions for checking the packets inside the queue
-
-    void sendpacket_to_centralrouter(packet p, int ip1)
-    {
-       //add this packet p to central router queue...
-       //also check for overflow in queue...
-       delay();
-       cout<<"the packet is sent from this node"<<p.source_ip<<" to "<<ip1<<"the intremediate path is from"<<p.source_mac<<" to "
-       <<"central router"<<endl;
-
+    Router(long long _mac_address, long long _ip_address, Network* _network) {
+        mac_address = _mac_address;
+        ip_address = _ip_address;
+        network = _network;
+        packets_received = 0;
+        packets_dropped = 0;
+        packets_processed = 0;
+        queue = NULL;
+        queue_length = 10;
     }
 
-    int search_table(int ip1,int ip)
-    {
-    	for(int i=0;i<n;i++)
-    	{
-    		if(node[i].ip_address == ip1 && node[i].router_address == ip )
-    		{
-    			return i;
-    		}
-    	}
-    	return -1;
+    void receivePacket(Packet packet) {
+        mtx.lock();
+        packets_received++;
+        if (q.length >= queue_length) {
+            cout<<"Packet Tail Dropped due to full queue length"<<endl;
+            packets_dropped++;
+            return;
+        }
+        else {
+            packets_processed++;
+            cout<<"Packet received at "<<packet->dest<<" from "<<packet-<src<<endl;
+            queue.push_back(q);
+        }
+        mtx.unlock();
     }
 
-    void checkpackets()
-    {
-    	if ( queue is empty)
-    	{
-    		do nothing
-    	}
-    	else
-    	{
-    		packet p = remove packet from top of the queue;
-    		int ip1 = p.destination_ip;
-
-    		
-    	    int i = search_table(ip1,ip_address);
-    	    if(i==-1) // not there in routing table
-    	    {
-               sendpacket_to_centralrouter(p,ip1);    
-    	    }
-    	    else
-    	    {
-    	    	node[i].receivepacket(p);
-    	    }
-    	
-    	}
+    void processQueue() {
+    	while(true) {
+            usleep(20);
+            if (q.size() != 0) {
+                mtx.lock();
+                Packet* packet = q.front();
+                q.pop();
+                mtx.unlock();
+                async(network->sendPacket, packet);
+            }
+        }
     }
-
-
 }
 

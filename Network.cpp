@@ -1,31 +1,42 @@
 #include <bits/stdc++.h>
 #include <mutex>
 #include "Node.cpp"
+#include "Router.cpp"
 #include "Packet.cpp"
 using namespace std;
 
 class Network {
-    long long base_ip;
-    long long mask;
+public:
+    Router* router;
+    CentralRouter* centralRouter;
+    vector<Node*> nodes;
     mutex mtx;
-	vector<Node> nodes;
-	vector<Packet> packets;
+    long long transmission_time;
 
-	void add_node (Node node) {
+    Network(Router* _router, CentralROuter* _centralRouter, long long _transmission_time) {
+        router = _router;
+        transmission_time = _transmission_time;
+        centralRouter = _centralRouter;
+    }
+
+	void add_node (Node* node) {
         mtx.lock();
         nodes.push_back(node);
         mtx.unlock();
     }
 
-    void add_packet (Packet packet) {
-        mtx.lock();
-        packets.push_back(packet);
-        mtx.unlock();
-    }
-
-    void remove_packet (Packet packet) {
-        mtx.lock();
-        packets.erase(remove(packets.begin(), packets.end(), packet), packets.end());
-        mtx.unlock();
+    void sendPacket (Packet* packet) {
+        auto same_network_index = find(nodes.begin(), nodes.end(), packet.dest);
+        
+        if (same_network_index == nodes.end()) {
+            usleep(transmission_time);
+            centralRouter->sendPacket(packet, router->ip_address);
+        }
+        
+        else {
+            long long index = same_network_index - nodes.begin();
+            usleep(nodes[index]->transmission_time);
+            nodes[index]->sendPacket(packet);
+        }
     }
 };

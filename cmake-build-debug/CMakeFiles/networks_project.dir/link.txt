@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/networks_project.dir/Network.cpp.o CMakeFiles/networks_project.dir/Node.cpp.o CMakeFiles/networks_project.dir/Packet.cpp.o  -o networks_project 
