@@ -1,11 +1,12 @@
 #include<iostream>
+#include "Router.cpp"
+#include "CentralRouter.cpp"
 using namespace std;
 
 int main()
 {  
-    int n;       //n == number of all nodes
+    /*int n;       //n == number of all nodes
     int r = 2;   //number of normal routers is 2 only
-    
 
     Node nodes[n];                          //instantiate n number of nodes
     Router Routers[2];                      // only 2 routers
@@ -27,7 +28,7 @@ int main()
 
     //assigned addresses and initialisation done for all the nodes
     //now moving onto packets stuff
-    //hard code the packet initialisation here....
+    //hard code the packet initialisation here....*/
     
-
+    return 0;
 }

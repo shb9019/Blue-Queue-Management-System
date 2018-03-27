@@ -1,8 +1,9 @@
 #include <bits/stdc++.h>
 #include <unistd.h>
 #include "Packet.cpp"
-#include "Router.cpp"
 using namespace std;
+
+class Router;
 
 class Node {
 public:

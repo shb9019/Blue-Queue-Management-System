@@ -1,20 +1,16 @@
 #include <bits/stdc++.h>
 #include <mutex>
 #include "Node.cpp"
-#include "Router.cpp"
 #include "Packet.cpp"
 using namespace std;
 
 class Network {
 public:
-    Router* router;
-    CentralRouter* centralRouter;
     vector<Node*> nodes;
     mutex mtx;
     long long transmission_time;
 
-    Network(Router* _router, CentralROuter* _centralRouter, long long _transmission_time) {
-        router = _router;
+    Network(CentralRouter* _centralRouter, long long _transmission_time) {
         transmission_time = _transmission_time;
         centralRouter = _centralRouter;
     }
